@@ -45,6 +45,7 @@ a:focus {
     color: #777990;
 }
 
+
 h3 {
     font-family: 'Satoshi-Medium';
     font-size: 1.5em;
@@ -67,6 +68,14 @@ h1 {
     font-size: 1em;
     color: #fff;
     font-family: 'Satoshi-Medium';
+    transition: all 300ms ease;
+}
+
+.btn:hover {
+    background-color:#fff;
+    color: #14142B; 
+    transform: translate3d(0px, -6px, 0.01px);
+    box-shadow: 0 4px 20px -5px rgb(20 20 43 / 15%);
 }
 
 
@@ -85,6 +94,15 @@ header > div.header-container {
     align-items: center;
     height: 4rem;
     width: 1024px;
+}
+
+header > div.header-container > .logo img {
+    width: 130px;
+    transition: transform 300ms ease;
+}
+
+header > div.header-container > .logo img:hover {
+    transform: translate(0px, -6px);
 }
 
 header > div.header-container > nav > ul {
