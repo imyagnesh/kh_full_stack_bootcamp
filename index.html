@@ -12,6 +12,19 @@
     <meta name="keywords" content="appple, iphone">
     <title>Portfolio</title>
     <link rel="stylesheet" href="./style.css">
+    <!-- If you deal with document then we can write javascript in head section -->
+    <script>
+        document.addEventListener('scroll', function(){
+            if(document.documentElement.scrollTop > 100) {
+                var header = document.getElementsByTagName('header');
+                header[0].style = 'background-color: #fff; box-shadow: 0px 1px 27px -3px rgb(0 0 0 / 20%);'
+            } else {
+                var header = document.getElementsByTagName('header');
+                header[0].style = 'background-color: transparent;box-shadow: none;'
+            }
+            // console.log(lastKnownScrollPosition);
+        })
+    </script>
 </head>
 <body>
     <header>
@@ -53,8 +66,16 @@
                     <h3>Hey, i'm Yagnesh Modh</h3>
                     <h1>I enjoy designing tech websites and digital products</h1>
                     <div>
-                        <button type="button" class="btn">Get in touch</button>
+                        <button type="button" id="get-in-touch" class="btn">Get in touch</button>
                     </div>
+                    <!-- If you are dealing with element then we have to write javascript in body section only -->
+                    <script>
+                        var getInTouchBtn = document.getElementById('get-in-touch');
+                        console.log(getInTouchBtn);
+                        getInTouchBtn.addEventListener('click', function() {
+                            alert("Get in Touch Button Clicked");
+                        } );
+                    </script>
                 </div>
                 <div class="image-wrapper">
                 <img src="https://assets.website-files.com/61129bb2ecedf803564c68ec/6112af58d6338c4181aaed8c_hero-image-personal-x-template.png" alt="My Image">
@@ -62,9 +83,18 @@
             </div>
         </section>
         <!-- <section id="about">
-            <h2>About Section</h2>
-        </section>
-        <section id="portfolio">
+            
+        </section> -->
+        <div class="about-wrapper">
+            <div class="box">Item 1</div>
+            <div class="box">Item 2</div>
+            <div class="box">Item 3</div>
+            <div class="box">Item 4</div>
+            <div class="box">Item 5</div>
+            <div class="box">Item 6</div>
+            <div class="box">Item 7</div>
+        </div>
+        <!-- <section id="portfolio">
             <h2>Portfolio Section</h2>
         </section>
         <section id="blog">
@@ -77,9 +107,7 @@
     <footer>
 
     </footer>
-    
-    
-
 </div>
+
 </body>
 </html>
