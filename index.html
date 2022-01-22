@@ -82,6 +82,16 @@
             </div>
             </div>
         </section>
+        <section id="projects">
+            <div id="project-grid">
+                <!-- <div>
+                    <img src="https://res.cloudinary.com/dnxzgxivo/image/upload/v1594980931/Screenshot_20200717_153934_GNO_FSA_067aafa267.jpg" alt="project 1"  />
+                    <h3>Field Sales Automation</h3>
+                    <p>Field Sales automation helps Strengthening field sales productivity and visibility using Salesforce.com\nthe solution to engage with the retailer in a whole new way, It Engages with retailers better and faster plan\nexecute the weekly tour plan effectively with the right quality of data Field data management.</p>
+                </div> -->
+                
+            </div>
+        </section>
         <!-- <section id="about">
             
         </section> -->
@@ -103,11 +113,173 @@
         <section id="contact">
             <h2>Contact Section</h2>
         </section> -->
+        <section id="contact-us">
+            <form id="contact-form" novalidate>
+                <div>
+                    <label for="name">Name</label>
+                    <input type="text" id="name" onblur="checkError(event)" />
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" onblur="checkError(event)" />
+                </div>
+                <div>
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" onblur="checkError(event)" />
+                </div>
+                <div>
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" onblur="checkError(event)" />
+                </div>
+                <div>
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="5">
+                        </textarea>
+                </div>
+                <button type="submit">Send</button>
+            </form>
+        </section>
     </main>
     <footer>
 
     </footer>
 </div>
+
+<script>
+    // const loadProjects = async () => {
+    //     try {
+    //         const res = await fetch("http://yam-api.herokuapp.com/projects");
+    //         const json = await res.json();
+    //         console.log(json);
+    //     } catch (error) {
+            
+    //     }
+    // }
+
+    // const loadBlogs = async () => {
+    //     try {
+    //         const res = await fetch("http://yam-api.herokuapp.com/blogs");
+    //         const json = await res.json();
+    //         console.log(json);
+    //     } catch (error) {
+            
+    //     }
+    // }
+
+    // loadProjects();
+    // loadBlogs();
+
+    const checkError = (event) => {
+        if(event.target.value) { 
+            event.target?.nextElementSibling?.remove()
+        }
+    }
+
+    const loadData = async () => {
+
+        const res = await Promise.allSettled([
+            fetch("http://yam-api.herokuapp.com/projects"),
+            fetch("http://yam-api.herokuapp.com/blogs")
+        ])
+
+        console.log(res);
+        const json = await Promise.allSettled([
+            res[0]?.value.json(),
+            res[1]?.value.json(),
+        ])
+
+        const projects = json[0].value.slice(1,7);
+
+        const projectGrid = document.getElementById("project-grid")
+        
+        for (let i = 0; i < projects.length; i++) {
+            const projectItem = document.createElement('div');
+
+            const img = document.createElement('img');
+            img.src = projects[i].images[0].url;
+            img.alt = projects[i].projectName;
+
+            const title = document.createElement('h3');
+            title.innerText = projects[i].projectName;
+
+            const desc = document.createElement('p');
+            desc.innerText = projects[i].Description;
+
+            projectItem.appendChild(img);
+            projectItem.appendChild(title);
+            projectItem.appendChild(desc);
+
+            projectGrid.appendChild(projectItem);
+        }
+
+
+    }
+
+    loadData();
+
+    const addError = (element, id, message) => {
+        const errMessage = document.createElement("p");
+        errMessage.id = id
+        errMessage.style = "color: red;"
+        errMessage.innerText = message;
+        element.after(errMessage);
+    }
+
+    const contactForm = document.getElementById("contact-form");
+    contactForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const name = document.getElementById("name");
+        const email = document.getElementById("email");
+        const phone = document.getElementById("phone");
+        const subject = document.getElementById("subject");
+        const description = document.getElementById("description");
+        let isFormValid = true;
+
+        if(!name.value) {
+            addError(name, "errName", "Please enter name.")
+            isFormValid = false;
+        } else {
+            const errName = document.getElementById("errName");
+            errName?.remove();
+        }
+        if(!email.value) {
+            addError(email, "errEmail", "Please enter Email.")
+            isFormValid = false;
+        }
+        else {
+            const errEmail = document.getElementById("errEmail");
+            errEmail?.remove();
+        }
+        if(!phone.value) {
+            addError(phone, "errPhone", "Please enter Phone number.")
+            isFormValid = false;
+        }
+        else {
+            const errPhone = document.getElementById("errPhone");
+            errPhone?.remove();
+        }
+
+        if(isFormValid) {
+           const res = await fetch("http://localhost:3000/contact", {
+               method: "POST",
+               body: JSON.stringify({
+                name: name.value,  
+                email: email.value,
+                phone:phone.value,
+                subject: subject.value,
+                description: description.value
+               }),
+               headers: {
+                "Content-Type": "application/json"   
+               }
+           });
+           if(res.ok) {
+               alert("form is successfully submitted")
+           }
+        }
+    })
+
+</script>
 
 </body>
 </html>
