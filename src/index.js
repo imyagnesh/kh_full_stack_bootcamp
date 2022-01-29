@@ -1,13 +1,14 @@
 import greetings, { b, c } from './app'
 import xyz from './test'
+import './style.css'
 
 const a = 1;
 
 console.log("a from index.js", a);
 
-function sum(a, b) {
-    return  a + b;
-}
+const sum = (a, b) => a + b;
+
+
 
 console.log(xyz(5,4));
 
