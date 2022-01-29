@@ -1,0 +1,1 @@
+(()=>{"use strict";console.log("b from app.js",2);console.log("a from index.js",1),console.log(5*4),console.log("sum from index.js",5),console.log(`Hello ${"Yagnesh"}`);const o=new class{constructor(o){this.type=o}printType(){console.log(this.type)}}("dog");console.log(o.printType())})();

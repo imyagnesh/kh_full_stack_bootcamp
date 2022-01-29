@@ -1,0 +1,29 @@
+{
+  "name": "kh_full_stack_bootcamp",
+  "version": "0.0.1",
+  "description": "react project",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imyagnesh/kh_full_stack_bootcamp.git"
+  },
+  "keywords": [
+    "javascript",
+    "react",
+    "es6"
+  ],
+  "author": "Yagnesh Modh (yagnesh.modh@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/imyagnesh/kh_full_stack_bootcamp/issues"
+  },
+  "homepage": "https://github.com/imyagnesh/kh_full_stack_bootcamp#readme",
+  "devDependencies": {
+    "webpack": "^5.67.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
