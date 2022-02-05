@@ -1,5 +1,6 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
+import App from './app';
 import './style.css';
 
 // React component rules
@@ -10,7 +11,7 @@ import './style.css';
 
 // 1. Props are immutable
 
-const color = 'white';
+// const color = 'white';
 // Function Component
 
 // const App = ({ title, caption }: AppProps) => (
@@ -30,53 +31,29 @@ const color = 'white';
 
 // Class Component
 
-type AppProps = {};
+// state is mutable
+// change state value have to use this.setState
 
-type AppState = {
-  counter: number;
-};
+// life cycle methods
 
-class App extends React.Component<AppProps, AppState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      counter: 0,
-    };
-  }
+// 4 stages of life cycle methods
 
-  render(): React.ReactNode {
-    console.log('Render');
+// 1. Mounting
 
-    const { counter } = this.state;
+// Constructor
+// getDerivedStateFromProps
 
-    return (
-      <>
-        <button
-          type="button"
-          onClick={() => {
-            // on set state method call render call again
-            this.setState({
-              counter: counter + 1,
-            });
-          }}
-        >
-          Increment
-        </button>
-        <h1>{counter}</h1>
-        <button
-          type="button"
-          onClick={() => {
-            this.setState({
-              counter: counter - 1,
-            });
-          }}
-        >
-          Decrement
-        </button>
-        <h1>I have changed my code</h1>
-      </>
-    );
-  }
-}
+// 2. Updating
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// 3. Unmounting
+
+// 4. Error
+
+// App.getDerivedStateFromProps = (props, state) => {
+//   console.log('getDerivedStateFromProps');
+//   return {
+//     greet: `Hello, ${state.name}`,
+//   };
+// };
+
+ReactDOM.render(<App name="Yagnesh" />, document.getElementById('root'));
