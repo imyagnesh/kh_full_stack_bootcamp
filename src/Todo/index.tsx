@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import classnames from 'classnames';
 import './todo.css';
 
@@ -11,32 +11,33 @@ type TodoItem = {
 type Props = {};
 
 type State = {
-  todoText: string;
   todoList: TodoItem[];
 };
 
 class Todo extends Component<Props, State> {
   state = {
-    todoText: '',
     todoList: [] as TodoItem[],
   };
 
-  onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      todoText: e.target.value,
-    });
-  };
+  inputRef = createRef<HTMLInputElement>();
 
   handleAddTodo = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    this.setState(({ todoText, todoList }) => ({
-      todoList: [
-        ...todoList,
-        { text: todoText, id: new Date().valueOf(), isCompleted: false },
-      ],
-      todoText: '',
-    }));
+    // O(N)
+    // const todoText = (document.getElementById('txtTodo') as HTMLInputElement).value;
+
+    // O(1)
+    const todoText = this.inputRef.current?.value;
+
+    if (todoText) {
+      this.setState(({ todoList }) => ({
+        todoList: [
+          ...todoList,
+          { text: todoText, id: new Date().valueOf(), isCompleted: false },
+        ],
+      }));
+    }
   };
 
   toggleCompleted = (todoItem: TodoItem) => {
@@ -57,12 +58,14 @@ class Todo extends Component<Props, State> {
   };
 
   render() {
-    const { todoText, todoList } = this.state;
+    console.log('app render');
+
+    const { todoList } = this.state;
     return (
       <div className="flex flex-col items-center">
         <h1 className="heading1 text-center">Todo App</h1>
         <form className="flex max-w-3xl my-4" onSubmit={this.handleAddTodo}>
-          <input type="text" value={todoText} onChange={this.onChangeText} />
+          <input type="text" id="txtTodo" ref={this.inputRef} />
           <button
             type="submit"
             className="btn min-w-[100px] rounded-none rounded-r"
