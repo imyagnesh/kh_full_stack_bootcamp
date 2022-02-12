@@ -23,17 +23,18 @@ type AppState = {
 // render
 // componentDidMount
 
+// When Prop or state value change
 // 2. Updating
 
 // getDerivedStateFromProps
-// shouldComponentUpdate
+// shouldComponentUpdate (M IMP)
 // render
 // getSnapshotBeforeUpdate
 // componentDidUpdate
 
 // 3. Unmounting
 
-// componentWillUnmount
+// componentWillUnmount (MIMP)
 
 // 4. Error
 

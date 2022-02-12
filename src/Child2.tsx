@@ -18,22 +18,22 @@ export default class Child2 extends PureComponent<Props, State> {
   //     return shallowCompare(this, nextProps, nextState);
   //   }
 
-  //   mouseMove = () => {
-  //     console.log('mouse move');
-  //   };
+  mouseMove = () => {
+    console.log('mouse move');
+  };
 
-  //   componentDidMount() {
-  //     document.addEventListener('mousemove', this.mouseMove);
+  componentDidMount() {
+    document.addEventListener('mousemove', this.mouseMove);
 
-  //     this.interval = setInterval(() => {
-  //       console.log('interval');
-  //     }, 1000);
-  //   }
+    this.interval = setInterval(() => {
+      console.log('interval');
+    }, 1000);
+  }
 
-  //   componentWillUnmount() {
-  //     document.removeEventListener('mousemove', this.mouseMove);
-  //     clearInterval(this.interval);
-  //   }
+  componentWillUnmount() {
+    document.removeEventListener('mousemove', this.mouseMove);
+    clearInterval(this.interval);
+  }
 
   increment = () => {
     this.setState(({ counter }) => ({ counter: counter + 1 }));

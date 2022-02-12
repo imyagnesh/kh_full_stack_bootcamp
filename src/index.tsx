@@ -1,7 +1,10 @@
-import * as React from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
+// import App from './app';
+import Todo from './Todo';
 import './style.css';
+
+ReactDOM.render(<StrictMode><Todo /></StrictMode>, document.getElementById('root'));
 
 // React component rules
 // 1. First Letter should always capital
@@ -55,5 +58,3 @@ import './style.css';
 //     greet: `Hello, ${state.name}`,
 //   };
 // };
-
-ReactDOM.render(<App name="Yagnesh" />, document.getElementById('root'));

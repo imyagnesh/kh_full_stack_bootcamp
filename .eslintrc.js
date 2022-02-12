@@ -24,5 +24,6 @@ module.exports = {
         namedComponents: 'arrow-function',
       },
     ],
+    'react/state-in-constructor': 0,
   },
 };
