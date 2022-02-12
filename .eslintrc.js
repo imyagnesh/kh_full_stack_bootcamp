@@ -25,5 +25,6 @@ module.exports = {
       },
     ],
     'react/state-in-constructor': 0,
+    'no-unused-vars': 0,
   },
 };
