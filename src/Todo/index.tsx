@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 import './todo.css';
 
 type TodoItem = {
@@ -36,8 +37,15 @@ class Todo extends Component<Props, State> {
   };
 
   toggleCompleted = (todoItem: TodoItem) => {
-    console.log(todoItem);
-  }
+    this.setState(({ todoList }) => ({
+      todoList: todoList.map((item) => {
+        if (item.id === todoItem.id) {
+          return { ...item, isCompleted: !item.isCompleted };
+        }
+        return item;
+      }),
+    }));
+  };
 
   render() {
     const { todoText, todoList } = this.state;
@@ -55,7 +63,12 @@ class Todo extends Component<Props, State> {
             todoList.map((todoItem) => (
               <div className="flex items-center m-2" key={todoItem.id}>
                 <input type="checkbox" checked={todoItem.isCompleted} onChange={() => this.toggleCompleted(todoItem)} />
-                <p className="flex-1 mx-3">{todoItem.text}</p>
+                <p className={classnames('flex-1 mx-3', {
+                  'line-through': todoItem.isCompleted,
+                })}
+                >
+                  {todoItem.text}
+                </p>
                 <button type="button" className="btn">Delete</button>
               </div>
             ))
