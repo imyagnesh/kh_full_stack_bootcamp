@@ -51,13 +51,9 @@ class Todo extends Component<Props, State> {
   };
 
   handleDelete = (todoItem: TodoItem) => {
-    this.setState(({ todoList }, props) => {
-      return {
-        todoList: todoList.filter((item) => {
-          return item.id !== todoItem.id;
-        }),
-      };
-    });
+    this.setState(({ todoList }) => ({
+      todoList: todoList.filter((item) => item.id !== todoItem.id),
+    }));
   };
 
   render() {
