@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import './todo.css';
 
+type TodoItem = {
+  id: number;
+  text: string;
+  isCompleted: boolean
+}
+
 type Props = {};
 
 type State = {
     todoText: string;
+    todoList: TodoItem[];
 };
 
 class Todo extends Component<Props, State> {
   state = {
     todoText: '',
+    todoList: [] as TodoItem[],
   };
 
   onChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,17 +26,41 @@ class Todo extends Component<Props, State> {
     });
   };
 
+  handleAddTodo = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    this.setState(({ todoText, todoList }) => ({
+      todoList: [...todoList, { text: todoText, id: new Date().valueOf(), isCompleted: false }],
+      todoText: '',
+    }));
+  };
+
+  toggleCompleted = (todoItem: TodoItem) => {
+    console.log(todoItem);
+  }
+
   render() {
-    const { todoText } = this.state;
+    const { todoText, todoList } = this.state;
     return (
       <div className="flex flex-col items-center">
         <h1 className="heading1 text-center">
           Todo App
         </h1>
-        <form className="flex max-w-3xl my-4">
-          <input type="text" className="input" value={todoText} onChange={this.onChangeText} />
-          <button type="submit" className="btn min-w-[100px]">Add Todo</button>
+        <form className="flex max-w-3xl my-4" onSubmit={this.handleAddTodo}>
+          <input type="text" value={todoText} onChange={this.onChangeText} />
+          <button type="submit" className="btn min-w-[100px] rounded-none rounded-r">Add Todo</button>
         </form>
+        <div className="w-full">
+          {
+            todoList.map((todoItem) => (
+              <div className="flex items-center m-2" key={todoItem.id}>
+                <input type="checkbox" checked={todoItem.isCompleted} onChange={() => this.toggleCompleted(todoItem)} />
+                <p className="flex-1 mx-3">{todoItem.text}</p>
+                <button type="button" className="btn">Delete</button>
+              </div>
+            ))
+          }
+        </div>
       </div>
     );
   }
