@@ -6,7 +6,7 @@ type Props = {
     todoItem: TodoItemType;
     handleDelete: (todoItem: TodoItemType) => void;
     toggleCompleted: (todoItem: TodoItemType) => void;
-    handleEdit: (todoItem: TodoItemType) => void;
+    handleEdit: (todoItem: TodoItemType, value: string) => void;
 }
 
 type State = {}
@@ -24,10 +24,10 @@ class TodoItem extends Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (this.inputRef.current) {
-        const { todoItem } = this.props;
-        this.inputRef.current.value = todoItem.text;
-      }
+    const { todoItem } = this.props;
+    if (todoItem.isEditing && this.inputRef.current) {
+      this.inputRef.current.value = todoItem.text;
+    }
   }
 
   render() {
@@ -52,7 +52,7 @@ class TodoItem extends Component<Props, State> {
             </p>
           )}
         </div>
-        <button type="button" className="btn mr-2" onClick={() => handleEdit(todoItem)}>Edit</button>
+        <button type="button" className="btn mr-2" onClick={() => handleEdit(todoItem, this.inputRef.current?.value)}>Edit</button>
         <button
           type="button"
           onClick={() => handleDelete(todoItem)}
