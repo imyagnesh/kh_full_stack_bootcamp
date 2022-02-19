@@ -20,16 +20,25 @@ class Todo extends Component<Props, State> {
   inputRef = createRef<HTMLInputElement>();
 
   async componentDidMount() {
+    this.loadData('all');
+  }
+
+  loadData = async (filterStatus: FilterStatus) => {
     try {
-      const res = await fetch('http://localhost:3000/todoList');
+      let url = 'http://localhost:3000/todoList';
+      if (filterStatus !== 'all') {
+        url = `${url}?isCompleted=${filterStatus === 'completed'}`;
+      }
+      const res = await fetch(url);
       const json = await res.json();
       this.setState({
         todoList: json,
+        filterStatus,
       });
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   handleAddTodo = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -110,12 +119,6 @@ class Todo extends Component<Props, State> {
     }
   };
 
-  handleFilterStatus = (filterType: FilterStatus) => {
-    this.setState({
-      filterStatus: filterType,
-    });
-  };
-
   toggleEdit = (todoItem: TodoItemType) => {
     this.setState(({ todoList }) => ({
       todoList: todoList.map((x) =>
@@ -141,45 +144,41 @@ class Todo extends Component<Props, State> {
           </button>
         </form>
         <div className="w-full flex-1 overflow-auto">
-          {todoList.map((todoItem) => {
-            const TodoItemComponent = (
-              <TodoItem
-                key={todoItem.id}
-                todoItem={todoItem}
-                handleDelete={this.handleDelete}
-                toggleCompleted={this.toggleCompleted}
-                toggleEdit={this.toggleEdit}
-              />
-            );
-            if (
-              filterStatus === 'all' ||
-              (filterStatus === 'pending' && !todoItem.isCompleted) ||
-              (filterStatus === 'completed' && todoItem.isCompleted)
-            ) {
-              return TodoItemComponent;
-            }
-            return null;
-          })}
+          {todoList.map((todoItem) => (
+            <TodoItem
+              key={todoItem.id}
+              todoItem={todoItem}
+              handleDelete={this.handleDelete}
+              toggleCompleted={this.toggleCompleted}
+              toggleEdit={this.toggleEdit}
+            />
+          ))}
         </div>
         <div className="w-full flex">
           <button
             type="button"
-            className="btn flex-1 rounded-none"
-            onClick={() => this.handleFilterStatus('all')}
+            className={classnames('btn flex-1 rounded-none', {
+              'bg-green-400 focus:ring-green-500': filterStatus === 'all',
+            })}
+            onClick={() => this.loadData('all')}
           >
             All
           </button>
           <button
             type="button"
-            className="btn flex-1 rounded-none"
-            onClick={() => this.handleFilterStatus('pending')}
+            className={classnames('btn flex-1 rounded-none', {
+              'bg-green-400 focus:ring-green-500': filterStatus === 'pending',
+            })}
+            onClick={() => this.loadData('pending')}
           >
             Pending
           </button>
           <button
             type="button"
-            className="btn flex-1 rounded-none"
-            onClick={() => this.handleFilterStatus('completed')}
+            className={classnames('btn flex-1 rounded-none', {
+              'bg-green-400 focus:ring-green-500': filterStatus === 'completed',
+            })}
+            onClick={() => this.loadData('completed')}
           >
             Completed
           </button>

@@ -5,6 +5,18 @@
       "isCompleted": true,
       "isEditing": false,
       "id": 2
+    },
+    {
+      "text": "learn react",
+      "isCompleted": false,
+      "isEditing": false,
+      "id": 3
+    },
+    {
+      "text": "learn flutter",
+      "isCompleted": false,
+      "isEditing": false,
+      "id": 4
     }
   ]
 }
