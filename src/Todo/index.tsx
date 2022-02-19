@@ -100,10 +100,15 @@ class Todo extends Component<Props, State> {
     }
   };
 
-  handleDelete = (todoItem: TodoItemType) => {
-    this.setState(({ todoList }) => ({
-      todoList: todoList.filter((item) => item.id !== todoItem.id),
-    }));
+  handleDelete = async (todoItem: TodoItemType) => {
+    try {
+      const res = await fetch(`http://localhost:3000/todoList/${todoItem.id}`, {
+        method: 'DELETE',
+      });
+      this.setState(({ todoList }) => ({
+        todoList: todoList.filter((item) => item.id !== todoItem.id),
+      }));
+    } catch (error) {}
   };
 
   handleEdit = (todoItem: TodoItemType, value: string) => {
