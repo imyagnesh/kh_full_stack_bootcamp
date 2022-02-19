@@ -1,8 +1,8 @@
 {
   "todoList": [
     {
-      "text": "get food",
-      "isCompleted": false,
+      "text": "get maggi",
+      "isCompleted": true,
       "isEditing": false,
       "id": 2
     }

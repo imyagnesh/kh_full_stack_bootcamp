@@ -76,10 +76,7 @@ class Todo extends Component<Props, State> {
     try {
       const res = await fetch(`http://localhost:3000/todoList/${todoItem.id}`, {
         method: 'PUT',
-        body: JSON.stringify({
-          ...todoItem,
-          isCompleted: !todoItem.isCompleted,
-        }),
+        body: JSON.stringify(todoItem),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
@@ -108,28 +105,23 @@ class Todo extends Component<Props, State> {
       this.setState(({ todoList }) => ({
         todoList: todoList.filter((item) => item.id !== todoItem.id),
       }));
-    } catch (error) {}
-  };
-
-  handleEdit = (todoItem: TodoItemType, value: string) => {
-    this.setState(({ todoList }) => ({
-      todoList: todoList.map((item) => {
-        if (item.id === todoItem.id) {
-          return {
-            ...item,
-            isEditing: !item.isEditing,
-            text: value || item.text,
-          };
-        }
-        return item;
-      }),
-    }));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   handleFilterStatus = (filterType: FilterStatus) => {
     this.setState({
       filterStatus: filterType,
     });
+  };
+
+  toggleEdit = (todoItem: TodoItemType) => {
+    this.setState(({ todoList }) => ({
+      todoList: todoList.map((x) =>
+        x.id === todoItem.id ? { ...x, isEditing: !x.isEditing } : x,
+      ),
+    }));
   };
 
   render() {
@@ -155,8 +147,8 @@ class Todo extends Component<Props, State> {
                 key={todoItem.id}
                 todoItem={todoItem}
                 handleDelete={this.handleDelete}
-                handleEdit={this.handleEdit}
                 toggleCompleted={this.toggleCompleted}
+                toggleEdit={this.toggleEdit}
               />
             );
             if (
