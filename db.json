@@ -1,7 +1,7 @@
 {
   "todoList": [
     {
-      "text": "get maggi",
+      "text": "get noodle",
       "isCompleted": true,
       "isEditing": false,
       "id": 2
@@ -17,6 +17,12 @@
       "isCompleted": false,
       "isEditing": false,
       "id": 4
+    },
+    {
+      "text": "learn node",
+      "isCompleted": false,
+      "isEditing": false,
+      "id": 5
     }
   ]
 }
