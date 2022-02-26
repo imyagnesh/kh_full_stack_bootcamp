@@ -1,5 +1,6 @@
 import { FieldAttributes } from 'formik';
 import Input, { BorderTypes } from '../../../components/Input';
+import Select, { OptionType } from '../../../components/Select';
 
 type RegisterInitValueTypes = {
   name: string;
@@ -17,7 +18,9 @@ export const RegisterInitValues: RegisterInitValueTypes = {
   confirmPassword: '',
 };
 
-export const RegisterFields: FieldAttributes<BorderTypes>[] = [
+type FieldsType = FieldAttributes<BorderTypes & { options?: OptionType[] }>;
+
+export const RegisterFields: FieldsType[] = [
   {
     name: 'name',
     component: Input,
@@ -40,6 +43,26 @@ export const RegisterFields: FieldAttributes<BorderTypes>[] = [
     type: 'date',
     autoComplete: 'bday',
     placeholder: 'Birth Date',
+    validate: (value) => {
+      if (!value) {
+        return 'Required...';
+      }
+      return undefined;
+    },
+  },
+  {
+    name: 'gender',
+    component: Select,
+    id: 'gender',
+    placeholder: 'Gender',
+    options: [
+      { text: 'Male', value: 'male' },
+      { text: 'Female', value: 'female' },
+      {
+        text: 'Other',
+        value: 'other',
+      },
+    ],
     validate: (value) => {
       if (!value) {
         return 'Required...';
