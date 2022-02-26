@@ -1,17 +1,19 @@
 import React from 'react';
-import ThemeContext from '../../../context/themeContext';
+import { Field } from 'formik';
+import { RegisterFields, RegisterInitValues } from './registerFields';
+import CustomForm from '../../../components/CustomForm';
 
 type Props = {};
 
 const Register = (props: Props) => (
-  <ThemeContext.Consumer>
-    {({ theme }) => (
-      <div>
-        <h1>Register</h1>
-        <p>Current Theme is {theme}</p>
-      </div>
-    )}
-  </ThemeContext.Consumer>
+  <CustomForm
+    initialValues={RegisterInitValues}
+    fields={RegisterFields}
+    onSubmit={(values) => {
+      console.log(values);
+    }}
+    btnName="Sign In"
+  />
 );
 
 export default Register;
