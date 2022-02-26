@@ -1,10 +1,20 @@
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-// import App from './app';
-import Todo from './Todo';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import { ThemeProvider } from './context/themeContext';
 import './style.css';
 
-ReactDOM.render(<StrictMode><Todo /></StrictMode>, document.getElementById('root'));
+ReactDOM.render(
+  <StrictMode>
+    <BrowserRouter>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
+  </StrictMode>,
+  document.getElementById('root'),
+);
 
 // React component rules
 // 1. First Letter should always capital
