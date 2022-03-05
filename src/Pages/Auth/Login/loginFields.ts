@@ -6,7 +6,7 @@ import {
 import Checkbox, { CheckboxProps } from '../../../components/Checkbox';
 import Input, { BorderTypes, InputProps } from '../../../components/Input';
 
-type LoginInitValueTypes = {
+export type LoginInitValueTypes = {
   email: string;
   password: string;
   rememberMe: boolean;

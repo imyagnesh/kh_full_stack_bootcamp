@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack serve --open",
+    "start:server": "json-server db.json -m ./node_modules/json-server-auth --port 3000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -46,6 +47,8 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "html-webpack-plugin": "^5.5.0",
+    "json-server": "^0.17.0",
+    "json-server-auth": "^2.1.0",
     "postcss": "^8.4.6",
     "postcss-loader": "^6.2.1",
     "prettier": "2.5.1",

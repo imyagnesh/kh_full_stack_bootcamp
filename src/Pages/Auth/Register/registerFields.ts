@@ -2,7 +2,7 @@ import { FieldAttributes } from 'formik';
 import Input, { BorderTypes } from '../../../components/Input';
 import Select, { OptionType } from '../../../components/Select';
 
-type RegisterInitValueTypes = {
+export type RegisterInitValueTypes = {
   name: string;
   birthDate: Date;
   email: string;
