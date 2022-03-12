@@ -6,12 +6,15 @@ import AuthLayout from './Layout/AuthLayout';
 import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
 import ChangePassword from './Pages/Auth/ChangePassword';
+import MainLayout from './Layout/MainLayout';
 
 type Props = {};
 
 const App = (props: Props) => (
   <Routes>
-    <Route path="/" element={<Home />} />
+    <Route path="/" element={<MainLayout />}>
+      <Route index element={<Home />} />
+    </Route>
     <Route path="/auth" element={<AuthLayout />}>
       <Route index element={<Login />} />
       <Route path="register" element={<Register />} />

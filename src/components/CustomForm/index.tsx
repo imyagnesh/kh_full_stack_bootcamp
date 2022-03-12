@@ -7,15 +7,20 @@ type Props<T> = {
   btnName: string;
 } & FormikConfig<T>;
 
-const CustomForm = <T extends {} = {}>({
+const CustomForm = <T extends { serverError?: undefined } = {}>({
   fields,
   children,
   btnName,
   ...props
 }: Props<T>) => (
   <Formik {...props}>
-    {({ handleSubmit, dirty, isValid }) => (
+    {({ handleSubmit, dirty, isValid, errors }) => (
       <form className="mt-8 space-y-6" noValidate onSubmit={handleSubmit}>
+        {errors.serverError && (
+          <p className="text-center text-red-400 font-light">
+            {errors.serverError}
+          </p>
+        )}
         <input type="hidden" name="remember" defaultValue="true" />
         <div className="rounded-md shadow-sm -space-y-px">
           {fields.map((x) => (

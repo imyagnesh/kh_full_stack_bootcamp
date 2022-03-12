@@ -1,38 +1,24 @@
 import React from 'react';
 import { Field } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   loginFields,
   loginInitValues,
   LoginInitValueTypes,
 } from './loginFields';
 import CustomForm from '../../../components/CustomForm';
+import { useAuth } from '../../../context/authContext';
 
 type Props = {};
 
 const Login = (props: Props) => {
-  const navigate = useNavigate();
-
-  const onSubmit = async (values: LoginInitValueTypes) => {
-    try {
-      const { rememberMe, ...rest } = values;
-      const res = await fetch('http://localhost:8080/login', {
-        method: 'POST',
-        body: JSON.stringify(rest),
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
-      navigate('/');
-    } catch (error) {}
-  };
+  const { handleLogin } = useAuth();
 
   return (
     <CustomForm
       initialValues={loginInitValues}
       fields={loginFields.slice(0, 2)}
-      onSubmit={onSubmit}
+      onSubmit={handleLogin}
       btnName="Sign In"
     >
       <div className="flex items-center justify-between">

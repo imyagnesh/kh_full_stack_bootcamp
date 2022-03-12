@@ -8,6 +8,7 @@ export type RegisterInitValueTypes = {
   email: string;
   password: string;
   confirmPassword: string;
+  serverError?: undefined;
 };
 
 export const RegisterInitValues: RegisterInitValueTypes = {

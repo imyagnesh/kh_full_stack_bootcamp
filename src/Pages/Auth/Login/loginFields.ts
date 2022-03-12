@@ -10,6 +10,7 @@ export type LoginInitValueTypes = {
   email: string;
   password: string;
   rememberMe: boolean;
+  serverError?: undefined;
 };
 
 export const loginInitValues: LoginInitValueTypes = {

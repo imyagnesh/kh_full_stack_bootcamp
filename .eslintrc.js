@@ -39,6 +39,7 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 0,
     'react/jsx-no-constructed-context-values': 0,
     'react/jsx-props-no-spreading': 0,
+    'no-undef': 0,
   },
   settings: {
     'import/resolver': {
