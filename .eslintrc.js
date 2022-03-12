@@ -40,6 +40,7 @@ module.exports = {
     'react/jsx-no-constructed-context-values': 0,
     'react/jsx-props-no-spreading': 0,
     'no-undef': 0,
+    'no-shadow': 0,
   },
   settings: {
     'import/resolver': {
