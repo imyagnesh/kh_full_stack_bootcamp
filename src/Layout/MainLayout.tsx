@@ -3,6 +3,8 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { ShoppingBagIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
+import { useCart } from '../context/cartContext';
+import { useProducts } from '../context/productsContext';
 
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -17,37 +19,11 @@ function classNames(...classes: string[]) {
 
 type Props = {};
 
-const products = [
-  {
-    id: 1,
-    name: 'Throwback Hip Bag',
-    href: '#',
-    color: 'Salmon',
-    price: '$90.00',
-    quantity: 1,
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-    imageAlt:
-      'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-  },
-  {
-    id: 2,
-    name: 'Medium Stuff Satchel',
-    href: '#',
-    color: 'Blue',
-    price: '$32.00',
-    quantity: 1,
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg',
-    imageAlt:
-      'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-  },
-  // More products...
-];
-
 const MainLayout = (props: Props) => {
-  const { user } = useAuth();
-  const [open, setOpen] = useState(true);
+  const { user, handleLogout } = useAuth();
+  const { cart, deleteCartItem } = useCart();
+  const { products } = useProducts();
+  const [open, setOpen] = useState(false);
 
   const toggleCart = () => {
     setOpen((val) => !val);
@@ -118,7 +94,7 @@ const MainLayout = (props: Props) => {
                       aria-hidden="true"
                     />
                     <span className="ml-2 text-sm font-medium text-gray-400 group-hover:text-white">
-                      0
+                      {cart.reduce((p, c) => c.quantity + p, 0)}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </button>
@@ -175,15 +151,16 @@ const MainLayout = (props: Props) => {
                         <Menu.Item>
                           {({ active }) => (
                             // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                            <a
-                              href="#"
+                            <button
+                              type="button"
+                              onClick={handleLogout}
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
                                 'block px-4 py-2 text-sm text-gray-700',
                               )}
                             >
                               Sign out
-                            </a>
+                            </button>
                           )}
                         </Menu.Item>
                       </Menu.Items>
@@ -268,48 +245,61 @@ const MainLayout = (props: Props) => {
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
-                              <li key={product.id} className="flex py-6">
-                                <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                  <img
-                                    src={product.imageSrc}
-                                    alt={product.imageAlt}
-                                    className="h-full w-full object-cover object-center"
-                                  />
-                                </div>
-
-                                <div className="ml-4 flex flex-1 flex-col">
-                                  <div>
-                                    <div className="flex justify-between text-base font-medium text-gray-900">
-                                      <h3>
-                                        <a href={product.href}>
-                                          {' '}
-                                          {product.name}{' '}
-                                        </a>
-                                      </h3>
-                                      <p className="ml-4">{product.price}</p>
+                            {cart.map((cartItem) => {
+                              const product = products.find(
+                                (x) => x.id === cartItem.productId,
+                              );
+                              if (product) {
+                                return (
+                                  <li key={cartItem.id} className="flex py-6">
+                                    <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                      <img
+                                        src={product.image}
+                                        alt={product.title}
+                                        className="h-full w-full object-cover object-center"
+                                      />
                                     </div>
-                                    <p className="mt-1 text-sm text-gray-500">
-                                      {product.color}
-                                    </p>
-                                  </div>
-                                  <div className="flex flex-1 items-end justify-between text-sm">
-                                    <p className="text-gray-500">
-                                      Qty {product.quantity}
-                                    </p>
 
-                                    <div className="flex">
-                                      <button
-                                        type="button"
-                                        className="font-medium text-indigo-600 hover:text-indigo-500"
-                                      >
-                                        Remove
-                                      </button>
+                                    <div className="ml-4 flex flex-1 flex-col">
+                                      <div>
+                                        <div className="flex justify-between text-base font-medium text-gray-900">
+                                          <h3>
+                                            <a href="#productId">
+                                              {' '}
+                                              {product.title}{' '}
+                                            </a>
+                                          </h3>
+                                          <p className="ml-4">
+                                            {new Intl.NumberFormat('en-IN', {
+                                              currency: 'INR',
+                                              style: 'currency',
+                                            }).format(product.price)}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <div className="flex flex-1 items-end justify-between text-sm">
+                                        <p className="text-gray-500">
+                                          Qty {cartItem.quantity}
+                                        </p>
+
+                                        <div className="flex">
+                                          <button
+                                            onClick={() =>
+                                              deleteCartItem(cartItem)
+                                            }
+                                            type="button"
+                                            className="font-medium text-indigo-600 hover:text-indigo-500"
+                                          >
+                                            Remove
+                                          </button>
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                </div>
-                              </li>
-                            ))}
+                                  </li>
+                                );
+                              }
+                              return null;
+                            })}
                           </ul>
                         </div>
                       </div>
@@ -318,7 +308,21 @@ const MainLayout = (props: Props) => {
                     <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>
+                          {new Intl.NumberFormat('en-US', {
+                            currency: 'INR',
+                            style: 'currency',
+                          }).format(
+                            cart.reduce((p, c) => {
+                              const productData: ProductsType | undefined =
+                                products.find((x) => x.id === c.productId);
+                              if (productData) {
+                                return p + c.quantity * productData.price;
+                              }
+                              return p + 0;
+                            }, 0),
+                          )}
+                        </p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Shipping and taxes calculated at checkout.

@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Rating from '../Rating';
 
 type Props = {
   data: ProductsType;
+  addToCart: (cartItem: Omit<CartType, 'id'>) => void;
+  updateToCart: (cartItem: CartType) => void;
+  deleteCartItem: (cartItem: CartType) => void;
+  cartItem?: CartType;
 };
 
-const Product = ({ data }: Props) => (
+const Product = ({
+  data,
+  addToCart,
+  cartItem,
+  updateToCart,
+  deleteCartItem,
+}: Props) => (
   <div
     key={data.id}
     className="w-full grid grid-cols-1 gap-y-8 gap-x-6 items-start sm:grid-cols-12 lg:gap-x-8 py-4"
@@ -31,7 +41,7 @@ const Product = ({ data }: Props) => (
           {new Intl.NumberFormat('en-IN', {
             currency: 'INR',
             style: 'currency',
-          }).format(1000000)}
+          }).format(data.price)}
         </p>
 
         <Rating {...data.rating} />
@@ -39,15 +49,60 @@ const Product = ({ data }: Props) => (
 
       <section aria-labelledby="options-heading" className="mt-10">
         <h3 id="options-heading">{data.description}</h3>
-        <button
-          type="button"
-          className="mt-6 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Add to bag
-        </button>
+        {cartItem ? (
+          <div className="flex items-center mt-6">
+            <button
+              type="button"
+              onClick={() =>
+                updateToCart({
+                  ...cartItem,
+                  quantity: cartItem.quantity + 1,
+                })
+              }
+              className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              +
+            </button>
+            <h5 className="flex-1 text-center">{cartItem.quantity}</h5>
+            <button
+              type="button"
+              onClick={() => {
+                if (cartItem.quantity > 1) {
+                  updateToCart({
+                    ...cartItem,
+                    quantity: cartItem.quantity - 1,
+                  });
+                } else {
+                  deleteCartItem(cartItem);
+                  //
+                }
+              }}
+              className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              -
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() =>
+              addToCart({
+                productId: data.id,
+                quantity: 1,
+              })
+            }
+            className="mt-6 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Add to bag
+          </button>
+        )}
       </section>
     </div>
   </div>
 );
 
-export default Product;
+Product.defaultProps = {
+  cartItem: undefined,
+};
+
+export default memo(Product);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { StarIcon } from '@heroicons/react/solid';
 
 function classNames(...classes: string[]) {
@@ -32,4 +32,4 @@ const Rating = ({ rate, count }: RatingType) => (
   </div>
 );
 
-export default Rating;
+export default memo(Rating);

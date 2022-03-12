@@ -7,12 +7,23 @@ import Register from './Pages/Auth/Register';
 import ForgotPassword from './Pages/Auth/ForgotPassword';
 import ChangePassword from './Pages/Auth/ChangePassword';
 import MainLayout from './Layout/MainLayout';
+import { ProductsProvider } from './context/productsContext';
+import { CartProvider } from './context/cartContext';
 
 type Props = {};
 
 const App = (props: Props) => (
   <Routes>
-    <Route path="/" element={<MainLayout />}>
+    <Route
+      path="/"
+      element={
+        <ProductsProvider>
+          <CartProvider>
+            <MainLayout />
+          </CartProvider>
+        </ProductsProvider>
+      }
+    >
       <Route index element={<Home />} />
     </Route>
     <Route path="/auth" element={<AuthLayout />}>

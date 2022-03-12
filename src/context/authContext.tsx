@@ -19,6 +19,7 @@ type AuthContextType = {
     values: LoginInitValueTypes,
     action: FormikHelpers<LoginInitValueTypes>,
   ) => Promise<void>;
+  handleLogout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -94,12 +95,18 @@ export const AuthProvider: FC = ({ children }) => {
     }
   };
 
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setUser(undefined);
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         handleRegister,
         handleLogin,
+        handleLogout,
       }}
     >
       {children}
