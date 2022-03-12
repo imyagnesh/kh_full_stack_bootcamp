@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Product from '../../components/Product';
-import ThemeContext from '../../context/themeContext';
+import Rating from '../../components/Rating';
 
 type Props = {};
 
@@ -34,16 +34,16 @@ const Home = (props: Props) => {
     }
   }, []);
 
+  // Component Did Mount
+  // as soon a component available in dom use Effect callback will call
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
 
-  console.log(products);
-
   return (
-    <div>
+    <div className="max-w-5xl mx-auto">
       {products.map((product) => (
-        <div key={product.id}>{product.title}</div>
+        <Product data={product} />
       ))}
     </div>
   );
