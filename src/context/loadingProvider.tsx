@@ -1,18 +1,20 @@
 import React, {
   createContext,
   FC,
-  useCallback,
   useMemo,
-  useState,
+  useReducer,
+  Dispatch,
+  useContext,
 } from 'react';
-
-type LoadingType = {
-  type: string;
-  id?: number;
-};
+import { LoadingStateType } from '../reducers/loadingReducer';
+import rootReducer, {
+  RootActionType,
+  rootInitValues,
+} from '../reducers/rootReducer';
 
 type LoadingContextType = {
-  loading: LoadingType[];
+  loading: LoadingStateType[];
+  loadingDispatch: Dispatch<RootActionType>;
 };
 
 export const LoadingContext = createContext<LoadingContextType>(
@@ -20,15 +22,19 @@ export const LoadingContext = createContext<LoadingContextType>(
 );
 
 export const LoadingProvider: FC = ({ children }) => {
-  const [loading, setLoading] = useState<LoadingType[]>([]);
+  const [{ loading }, loadingDispatch] = useReducer(
+    rootReducer,
+    rootInitValues,
+  );
 
-  const addLoader = useCallback((type, id) => {
-    setLoading((val) => [...val, { type, id }]);
-  }, []);
-
-  const value = useMemo(() => ({ loading, addLoader }), [loading, addLoader]);
+  const value = useMemo(
+    () => ({ loading, loadingDispatch }),
+    [loading, loadingDispatch],
+  );
 
   return (
     <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>
   );
 };
+
+export const useLoading = () => useContext(LoadingContext);

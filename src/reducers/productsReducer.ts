@@ -1,48 +1,21 @@
-export type ProductsReducerStoreType = {
-  products: ProductsType[];
-  loading: boolean;
-  error?: Error;
-};
-
-type LoadProductsRequestActionType = {
-  type: 'LOAD_PRODUCTS_REQUEST';
-  payload?: never;
-};
+import { LOAD_PRODUCTS, SUCCESS } from './actionsTypes';
 
 type LoadProductsSuccessActionType = {
-  type: 'LOAD_PRODUCTS_SUCCESS';
+  type: `${LOAD_PRODUCTS}_${SUCCESS}`;
   payload: ProductsType[];
 };
 
-type LoadProductsFailActionType = {
-  type: 'LOAD_PRODUCTS_FAIL';
-  payload: Error;
-};
+export type ProductsActionType = LoadProductsSuccessActionType;
 
-type ProductsActionType =
-  | LoadProductsRequestActionType
-  | LoadProductsSuccessActionType
-  | LoadProductsFailActionType;
-
-export const productsReducerInitValue = {
-  products: [],
-  loading: false,
-  error: undefined,
-};
+export const productsReducerInitValue = [];
 
 export const productsReducer = (
-  state: ProductsReducerStoreType,
+  state: ProductsType[],
   { type, payload }: ProductsActionType,
 ) => {
   switch (type) {
-    case 'LOAD_PRODUCTS_REQUEST':
-      return { ...state, loading: true };
-
     case 'LOAD_PRODUCTS_SUCCESS':
-      return { ...state, products: payload, loading: false };
-
-    case 'LOAD_PRODUCTS_FAIL':
-      return { ...state, error: payload, loading: false };
+      return payload;
 
     default:
       return state;

@@ -4,32 +4,35 @@ import React, {
   useCallback,
   useContext,
   useReducer,
-  useState,
 } from 'react';
-import {
-  productsReducer,
-  productsReducerInitValue,
-  ProductsReducerStoreType,
-} from '../reducers/productsReducer';
+import { ErrorStateType } from '../reducers/errorReducer';
+import { LoadingStateType } from '../reducers/loadingReducer';
+
+import rootReducer, { rootInitValues } from '../reducers/rootReducer';
 import axiosInstance from '../utils';
 
 type ProductContextType = {
   loadProducts: () => Promise<void>;
-} & ProductsReducerStoreType;
+  loading: LoadingStateType[];
+  products: ProductsType[];
+  error: ErrorStateType[];
+};
 
 const ProductsContext = createContext<ProductContextType>(
   {} as ProductContextType,
 );
 
 export const ProductsProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(
-    productsReducer,
-    productsReducerInitValue,
-  );
+  const [state, dispatch] = useReducer(rootReducer, rootInitValues);
 
   const loadProducts = useCallback(async () => {
     try {
-      dispatch({ type: 'LOAD_PRODUCTS_REQUEST' });
+      dispatch({
+        type: 'LOAD_PRODUCTS_REQUEST',
+        payload: {
+          message: 'Loading Products',
+        },
+      });
       const res = await axiosInstance.get<ProductsType[]>('660/products');
       dispatch({ type: 'LOAD_PRODUCTS_SUCCESS', payload: res.data });
     } catch (error) {
@@ -39,7 +42,10 @@ export const ProductsProvider: FC = ({ children }) => {
       }
       dispatch({
         type: 'LOAD_PRODUCTS_FAIL',
-        payload: new Error(errorMessage),
+        payload: {
+          error: new Error(errorMessage),
+          message: 'Loading Products Failed',
+        },
       });
     }
   }, []);
@@ -47,7 +53,9 @@ export const ProductsProvider: FC = ({ children }) => {
   return (
     <ProductsContext.Provider
       value={{
-        ...state,
+        products: state.products,
+        loading: state.loading,
+        error: state.error,
         loadProducts,
       }}
     >

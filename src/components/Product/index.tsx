@@ -7,6 +7,9 @@ type Props = {
   updateToCart: (cartItem: CartType) => void;
   deleteCartItem: (cartItem: CartType) => void;
   cartItem?: CartType;
+  isAdding: boolean;
+  isUpdating: boolean;
+  isDeleting: boolean;
 };
 
 const Product = ({
@@ -15,6 +18,9 @@ const Product = ({
   cartItem,
   updateToCart,
   deleteCartItem,
+  isAdding,
+  isUpdating,
+  isDeleting,
 }: Props) => (
   <div
     key={data.id}
@@ -53,19 +59,21 @@ const Product = ({
           <div className="flex items-center mt-6">
             <button
               type="button"
+              disabled={isUpdating || isDeleting}
               onClick={() =>
                 updateToCart({
                   ...cartItem,
                   quantity: cartItem.quantity + 1,
                 })
               }
-              className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400"
             >
               +
             </button>
             <h5 className="flex-1 text-center">{cartItem.quantity}</h5>
             <button
               type="button"
+              disabled={isUpdating || isDeleting}
               onClick={() => {
                 if (cartItem.quantity > 1) {
                   updateToCart({
@@ -77,7 +85,7 @@ const Product = ({
                   //
                 }
               }}
-              className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="flex-1 bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400"
             >
               -
             </button>
@@ -85,13 +93,14 @@ const Product = ({
         ) : (
           <button
             type="button"
+            disabled={isAdding}
             onClick={() =>
               addToCart({
                 productId: data.id,
                 quantity: 1,
               })
             }
-            className="mt-6 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="mt-6 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400"
           >
             Add to bag
           </button>
