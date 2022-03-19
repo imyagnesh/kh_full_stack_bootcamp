@@ -3,39 +3,51 @@ import React, {
   FC,
   useCallback,
   useContext,
+  useReducer,
   useState,
 } from 'react';
+import {
+  productsReducer,
+  productsReducerInitValue,
+  ProductsReducerStoreType,
+} from '../reducers/productsReducer';
 import axiosInstance from '../utils';
 
 type ProductContextType = {
-  products: ProductsType[];
   loadProducts: () => Promise<void>;
-};
+} & ProductsReducerStoreType;
 
 const ProductsContext = createContext<ProductContextType>(
   {} as ProductContextType,
 );
 
 export const ProductsProvider: FC = ({ children }) => {
-  const [products, setProducts] = useState<ProductsType[]>([]);
+  const [state, dispatch] = useReducer(
+    productsReducer,
+    productsReducerInitValue,
+  );
 
   const loadProducts = useCallback(async () => {
     try {
+      dispatch({ type: 'LOAD_PRODUCTS_REQUEST' });
       const res = await axiosInstance.get<ProductsType[]>('660/products');
-      setProducts(res.data);
+      dispatch({ type: 'LOAD_PRODUCTS_SUCCESS', payload: res.data });
     } catch (error) {
       let errorMessage = 'Something went wrong. Try after sometime';
       if (error instanceof Error) {
         errorMessage = error.message;
       }
-      console.log(error);
+      dispatch({
+        type: 'LOAD_PRODUCTS_FAIL',
+        payload: new Error(errorMessage),
+      });
     }
   }, []);
 
   return (
     <ProductsContext.Provider
       value={{
-        products,
+        ...state,
         loadProducts,
       }}
     >
