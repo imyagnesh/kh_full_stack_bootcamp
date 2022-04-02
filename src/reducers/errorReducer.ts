@@ -11,14 +11,14 @@ import {
 export type ErrorStateType = {
   actionType: ActionType;
   error: Error;
-  id?: number;
+  loadingId?: number;
   message?: string;
 };
 
 type WithoutIDActionType = {
   type: `${LOAD_PRODUCTS}_${FAIL}` | `${LOAD_CART}_${FAIL}`;
   payload: {
-    id?: never;
+    loadingId?: never;
     error: Error;
     message?: string;
   };
@@ -30,7 +30,7 @@ type WithIDActionType = {
     | `${UPDATE_CART}_${FAIL}`
     | `${DELETE_CART}_${FAIL}`;
   payload: {
-    id: number;
+    loadingId: number;
     error: Error;
     message?: string;
   };
@@ -39,7 +39,7 @@ type WithIDActionType = {
 export type ErrorActionType = WithoutIDActionType | WithIDActionType;
 
 const errorReducer = (
-  state: ErrorStateType[],
+  state: ErrorStateType[] = [],
   { type, payload }: ErrorActionType,
 ) => {
   const matches = /(.*)_(REQUEST|FAIL)/.exec(type);
@@ -54,7 +54,7 @@ const errorReducer = (
     ];
   }
   return state.filter(
-    (x) => x.actionType !== actionType && x.id !== payload.id,
+    (x) => x.actionType !== actionType && x.loadingId !== payload.loadingId,
   );
 };
 

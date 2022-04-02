@@ -283,29 +283,9 @@
       "id": 5
     },
     {
-      "productId": 6,
-      "quantity": 1,
-      "id": 6
-    },
-    {
-      "productId": 4,
-      "quantity": 1,
-      "id": 8
-    },
-    {
-      "productId": 3,
-      "quantity": 1,
-      "id": 9
-    },
-    {
-      "productId": 1,
-      "quantity": 8,
-      "id": 10
-    },
-    {
       "productId": 2,
       "quantity": 1,
-      "id": 11
+      "id": 6
     }
   ]
 }

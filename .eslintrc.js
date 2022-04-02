@@ -41,6 +41,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 0,
     'no-undef': 0,
     'no-shadow': 0,
+    'default-param-last': 0,
   },
   settings: {
     'import/resolver': {

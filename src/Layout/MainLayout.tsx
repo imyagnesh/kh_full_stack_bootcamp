@@ -1,10 +1,12 @@
 import React, { useEffect, useState, Fragment, useCallback } from 'react';
+import { connect } from 'react-redux';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { ShoppingBagIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
-import { useCart } from '../context/cartContext';
-import { useProducts } from '../context/productsContext';
+import { AppDispatch, RootState } from '..';
+import { ErrorStateType } from '../reducers/errorReducer';
+import { deleteCartAction } from '../actions/cartAction';
 
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -17,12 +19,24 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-type Props = {};
+type Props = {
+  cartCount: number;
+  totalPrice: number;
+  cart: CartType[];
+  products: ProductsType[];
+  errors: ErrorStateType[];
+  deleteCartItem: (cartItem: CartType) => Promise<void>;
+};
 
-const MainLayout = (props: Props) => {
+const MainLayout = ({
+  cartCount,
+  totalPrice,
+  cart,
+  products,
+  errors,
+  deleteCartItem,
+}: Props) => {
   const { user, handleLogout } = useAuth();
-  const { cart, error: cartError, deleteCartItem } = useCart();
-  const { products, error: productsError } = useProducts();
   const [open, setOpen] = useState(false);
 
   const toggleCart = useCallback(() => {
@@ -94,7 +108,7 @@ const MainLayout = (props: Props) => {
                       aria-hidden="true"
                     />
                     <span className="ml-2 text-sm font-medium text-gray-400 group-hover:text-white">
-                      {cart.reduce((p, c) => c.quantity + p, 0)}
+                      {cartCount}
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </button>
@@ -312,16 +326,7 @@ const MainLayout = (props: Props) => {
                           {new Intl.NumberFormat('en-US', {
                             currency: 'INR',
                             style: 'currency',
-                          }).format(
-                            cart.reduce((p, c) => {
-                              const productData: ProductsType | undefined =
-                                products.find((x) => x.id === c.productId);
-                              if (productData) {
-                                return p + c.quantity * productData.price;
-                              }
-                              return p + 0;
-                            }, 0),
-                          )}
+                          }).format(totalPrice)}
                         </p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
@@ -356,10 +361,10 @@ const MainLayout = (props: Props) => {
           </div>
         </Dialog>
       </Transition.Root>
-      {[...productsError, ...cartError].map((x, index) => (
+      {errors.map((x, index) => (
         <div
           role="alert"
-          key={`${x.actionType}_${x.id}`}
+          key={`${x.actionType}_${x.loadingId}`}
           className="fixed w-full p-4 md:w-1/2 lg:w-1/3"
           style={{
             bottom: `${index * 6}rem`,
@@ -390,4 +395,24 @@ const MainLayout = (props: Props) => {
   );
 };
 
-export default MainLayout;
+const mapStateToProps = (store: RootState) => ({
+  cartCount: store.cart.reduce((p, c) => c.quantity + p, 0),
+  totalPrice: store.cart.reduce((p, c) => {
+    const productData: ProductsType | undefined = store.products.find(
+      (x) => x.id === c.productId,
+    );
+    if (productData) {
+      return p + c.quantity * productData.price;
+    }
+    return p + 0;
+  }, 0),
+  cart: store.cart,
+  products: store.products,
+  errors: store.errors,
+});
+
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  deleteCartItem: (cartItem: CartType) => deleteCartAction(cartItem)(dispatch),
+});
+
+export default connect(mapStateToProps)(MainLayout);

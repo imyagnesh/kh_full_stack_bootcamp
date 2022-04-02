@@ -55,12 +55,15 @@ export const CartProvider: FC = ({ children }) => {
       dispatch({
         type: 'ADD_TO_CART_REQUEST',
         payload: {
-          id: cartItem.productId,
+          loadingId: cartItem.productId,
           message: 'Adding Item to cart',
         },
       });
       const res = await axiosInstance.post<CartType>('660/cart', cartItem);
-      dispatch({ type: 'ADD_TO_CART_SUCCESS', payload: res.data });
+      dispatch({
+        type: 'ADD_TO_CART_SUCCESS',
+        payload: { ...res.data, loadingId: cartItem.productId },
+      });
     } catch (error) {
       let errorMessage = 'Something went wrong. Try after sometime';
       if (error instanceof Error) {
@@ -69,7 +72,7 @@ export const CartProvider: FC = ({ children }) => {
       dispatch({
         type: 'ADD_TO_CART_FAIL',
         payload: {
-          id: cartItem.productId,
+          loadingId: cartItem.productId,
           error: new Error(errorMessage),
           message: errorMessage,
         },
@@ -82,7 +85,7 @@ export const CartProvider: FC = ({ children }) => {
       dispatch({
         type: 'UPDATE_CART_REQUEST',
         payload: {
-          id: cartItem.productId,
+          loadingId: cartItem.productId,
           message: 'Updating Cart',
         },
       });
@@ -90,7 +93,10 @@ export const CartProvider: FC = ({ children }) => {
         `660/cart/${cartItem.id}`,
         cartItem,
       );
-      dispatch({ type: 'UPDATE_CART_SUCCESS', payload: res.data });
+      dispatch({
+        type: 'UPDATE_CART_SUCCESS',
+        payload: { ...res.data, loadingId: cartItem.productId },
+      });
     } catch (error) {
       let errorMessage = 'Something went wrong. Try after sometime';
       if (error instanceof Error) {
@@ -99,7 +105,7 @@ export const CartProvider: FC = ({ children }) => {
       dispatch({
         type: 'UPDATE_CART_FAIL',
         payload: {
-          id: cartItem.productId,
+          loadingId: cartItem.productId,
           error: new Error(errorMessage),
           message: errorMessage,
         },
@@ -112,12 +118,15 @@ export const CartProvider: FC = ({ children }) => {
       dispatch({
         type: 'DELETE_CART_REQUEST',
         payload: {
-          id: cartItem.productId,
+          loadingId: cartItem.productId,
           message: 'Deleting Cart',
         },
       });
       await axiosInstance.delete(`660/cart/${cartItem.id}`);
-      dispatch({ type: 'DELETE_CART_SUCCESS', payload: cartItem });
+      dispatch({
+        type: 'DELETE_CART_SUCCESS',
+        payload: { ...cartItem, loadingId: cartItem.productId },
+      });
     } catch (error) {
       let errorMessage = 'Something went wrong. Try after sometime';
       if (error instanceof Error) {
@@ -126,7 +135,7 @@ export const CartProvider: FC = ({ children }) => {
       dispatch({
         type: 'DELETE_CART_FAIL',
         payload: {
-          id: cartItem.productId,
+          loadingId: cartItem.productId,
           error: new Error(errorMessage),
           message: errorMessage,
         },

@@ -9,8 +9,8 @@ export type ProductsActionType = LoadProductsSuccessActionType;
 
 export const productsReducerInitValue = [];
 
-export const productsReducer = (
-  state: ProductsType[],
+const productsReducer = (
+  state: ProductsType[] = [],
   { type, payload }: ProductsActionType,
 ) => {
   switch (type) {
@@ -21,3 +21,5 @@ export const productsReducer = (
       return state;
   }
 };
+
+export default productsReducer;

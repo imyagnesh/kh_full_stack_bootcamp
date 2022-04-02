@@ -1,19 +1,24 @@
 import React, { memo } from 'react';
+import { connect } from 'react-redux';
+import { AppDispatch, RootState } from '../..';
+import {
+  addCartAction,
+  deleteCartAction,
+  updateCartAction,
+} from '../../actions/cartAction';
 import Rating from '../Rating';
 
 type Props = {
-  data: ProductsType;
-  addToCart: (cartItem: Omit<CartType, 'id'>) => void;
-  updateToCart: (cartItem: CartType) => void;
-  deleteCartItem: (cartItem: CartType) => void;
   cartItem?: CartType;
   isAdding: boolean;
   isUpdating: boolean;
   isDeleting: boolean;
-};
+  addToCart: (cartItem: Omit<CartType, 'id'>) => Promise<void>;
+  updateToCart: (cartItem: CartType) => Promise<void>;
+  deleteCartItem: (cartItem: CartType) => Promise<void>;
+} & ProductsType;
 
 const Product = ({
-  data,
   addToCart,
   cartItem,
   updateToCart,
@@ -21,21 +26,23 @@ const Product = ({
   isAdding,
   isUpdating,
   isDeleting,
+  id,
+  image,
+  title,
+  price,
+  rating,
+  description,
 }: Props) => (
   <div
-    key={data.id}
+    key={id}
     className="w-full grid grid-cols-1 gap-y-8 gap-x-6 items-start sm:grid-cols-12 lg:gap-x-8 py-4"
   >
     <div className="aspect-w-4 aspect-h-3 rounded-lg bg-gray-100 overflow-hidden sm:col-span-3">
-      <img
-        src={data.image}
-        alt={data.title}
-        className="object-center object-cover"
-      />
+      <img src={image} alt={title} className="object-center object-cover" />
     </div>
     <div className="sm:col-span-9">
       <h2 className="text-2xl font-extrabold text-gray-900 sm:pr-12">
-        {data.title}
+        {title}
       </h2>
 
       <section aria-labelledby="information-heading" className="mt-2">
@@ -47,14 +54,14 @@ const Product = ({
           {new Intl.NumberFormat('en-IN', {
             currency: 'INR',
             style: 'currency',
-          }).format(data.price)}
+          }).format(price)}
         </p>
 
-        <Rating {...data.rating} />
+        <Rating {...rating} />
       </section>
 
       <section aria-labelledby="options-heading" className="mt-10">
-        <h3 id="options-heading">{data.description}</h3>
+        <h3 id="options-heading">{description}</h3>
         {cartItem ? (
           <div className="flex items-center mt-6">
             <button
@@ -96,7 +103,7 @@ const Product = ({
             disabled={isAdding}
             onClick={() =>
               addToCart({
-                productId: data.id,
+                productId: id,
                 quantity: 1,
               })
             }
@@ -113,5 +120,24 @@ const Product = ({
 Product.defaultProps = {
   cartItem: undefined,
 };
+const mapStateToProps = (store: RootState, props: ProductsType) => ({
+  cartItem: store.cart.find((x) => x.productId === props.id),
+  isAdding: store.loading.some(
+    (x) => x.actionType === 'ADD_TO_CART' && x.loadingId === props.id,
+  ),
+  isUpdating: store.loading.some(
+    (x) => x.actionType === 'UPDATE_CART' && x.loadingId === props.id,
+  ),
+  isDeleting: store.loading.some(
+    (x) => x.actionType === 'DELETE_CART' && x.loadingId === props.id,
+  ),
+});
 
-export default memo(Product);
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  addToCart: (cartItem: Omit<CartType, 'id'>) =>
+    addCartAction(cartItem)(dispatch),
+  updateToCart: (cartItem: CartType) => updateCartAction(cartItem)(dispatch),
+  deleteCartItem: (cartItem: CartType) => deleteCartAction(cartItem)(dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Product);

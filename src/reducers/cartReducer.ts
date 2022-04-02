@@ -16,14 +16,17 @@ type ModifySuccessActionType = {
     | `${ADD_TO_CART}_${SUCCESS}`
     | `${UPDATE_CART}_${SUCCESS}`
     | `${DELETE_CART}_${SUCCESS}`;
-  payload: CartType;
+  payload: CartType & { loadingId: number };
 };
 
 export type CartActionType =
   | LoadCartSuccessActionType
   | ModifySuccessActionType;
 
-const cartReducer = (state: CartType[], { type, payload }: CartActionType) => {
+const cartReducer = (
+  state: CartType[] = [],
+  { type, payload }: CartActionType,
+) => {
   switch (type) {
     case 'LOAD_CART_SUCCESS':
       return payload;

@@ -4,7 +4,7 @@ import loadingReducer, {
   LoadingActionType,
   LoadingStateType,
 } from './loadingReducer';
-import { ProductsActionType, productsReducer } from './productsReducer';
+import productsReducer, { ProductsActionType } from './productsReducer';
 
 export type RootStateType = {
   products: ProductsType[];

@@ -10,14 +10,14 @@ import {
 
 export type LoadingStateType = {
   actionType: ActionType;
-  id?: number;
+  loadingId?: number;
   message?: string;
 };
 
 type WithoutIDRequestActionType = {
   type: `${LOAD_PRODUCTS}_${REQUEST}` | `${LOAD_CART}_${REQUEST}`;
   payload: {
-    id?: never;
+    loadingId?: never;
     message?: string;
   };
 };
@@ -28,7 +28,7 @@ type WithIDRequestActionType = {
     | `${UPDATE_CART}_${REQUEST}`
     | `${DELETE_CART}_${REQUEST}`;
   payload: {
-    id: number;
+    loadingId: number;
     message?: string;
   };
 };
@@ -38,7 +38,7 @@ export type LoadingActionType =
   | WithIDRequestActionType;
 
 const loadingReducer = (
-  state: LoadingStateType[],
+  state: LoadingStateType[] = [],
   { type, payload }: LoadingActionType,
 ) => {
   const matches = /(.*)_(REQUEST|SUCCESS|FAIL)/.exec(type);
@@ -53,7 +53,7 @@ const loadingReducer = (
     ];
   }
   return state.filter(
-    (x) => x.actionType !== actionType && x.id !== payload.id,
+    (x) => x.actionType !== actionType && x.loadingId !== payload.loadingId,
   );
 };
 
