@@ -1,12 +1,10 @@
-import React, { useEffect, useState, Fragment, useCallback } from 'react';
-import { connect } from 'react-redux';
+import React, { useState, Fragment, useCallback } from 'react';
+
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { ShoppingBagIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/authContext';
-import { AppDispatch, RootState } from '..';
-import { ErrorStateType } from '../reducers/errorReducer';
-import { deleteCartAction } from '../actions/cartAction';
+import { useAuth } from '../../context/authContext';
+import { ErrorStateType } from '../../reducers/errorReducer';
 
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
@@ -25,6 +23,7 @@ type Props = {
   cart: CartType[];
   products: ProductsType[];
   errors: ErrorStateType[];
+  clearError: (index: number) => void;
   deleteCartItem: (cartItem: CartType) => Promise<void>;
 };
 
@@ -35,6 +34,7 @@ const MainLayout = ({
   products,
   errors,
   deleteCartItem,
+  clearError,
 }: Props) => {
   const { user, handleLogout } = useAuth();
   const [open, setOpen] = useState(false);
@@ -170,7 +170,7 @@ const MainLayout = ({
                               onClick={handleLogout}
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700',
+                                'w-full text-left block px-4 py-2 text-sm text-gray-700',
                               )}
                             >
                               Sign out
@@ -372,7 +372,7 @@ const MainLayout = ({
         >
           <div className="bg-red-500 flex justify-between items-center text-white font-bold rounded-t px-4 py-2">
             <span>Danger</span>
-            <button type="button">
+            <button type="button" onClick={() => clearError(index)}>
               <svg
                 className="fill-current h-6 w-6"
                 role="button"
@@ -395,24 +395,4 @@ const MainLayout = ({
   );
 };
 
-const mapStateToProps = (store: RootState) => ({
-  cartCount: store.cart.reduce((p, c) => c.quantity + p, 0),
-  totalPrice: store.cart.reduce((p, c) => {
-    const productData: ProductsType | undefined = store.products.find(
-      (x) => x.id === c.productId,
-    );
-    if (productData) {
-      return p + c.quantity * productData.price;
-    }
-    return p + 0;
-  }, 0),
-  cart: store.cart,
-  products: store.products,
-  errors: store.errors,
-});
-
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  deleteCartItem: (cartItem: CartType) => deleteCartAction(cartItem)(dispatch),
-});
-
-export default connect(mapStateToProps)(MainLayout);
+export default MainLayout;

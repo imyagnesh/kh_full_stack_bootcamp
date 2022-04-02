@@ -21,6 +21,7 @@ type WithoutIDActionType = {
     loadingId?: never;
     error: Error;
     message?: string;
+    index?: never;
   };
 };
 
@@ -33,15 +34,36 @@ type WithIDActionType = {
     loadingId: number;
     error: Error;
     message?: string;
+    index?: never;
   };
 };
 
-export type ErrorActionType = WithoutIDActionType | WithIDActionType;
+type ClearActionType = {
+  type: 'CLEAR_ERROR';
+  payload: {
+    loadingId?: never;
+    error?: never;
+    message?: never;
+    index: number;
+  };
+};
+
+export type ErrorActionType =
+  | WithoutIDActionType
+  | WithIDActionType
+  | ClearActionType;
 
 const errorReducer = (
   state: ErrorStateType[] = [],
   { type, payload }: ErrorActionType,
 ) => {
+  if (type === 'CLEAR_ERROR') {
+    return [
+      ...state.slice(0, payload.index),
+      ...state.slice(payload.index + 1),
+    ];
+  }
+
   const matches = /(.*)_(REQUEST|FAIL)/.exec(type);
   if (!matches) {
     return state;

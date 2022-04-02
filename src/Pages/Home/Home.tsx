@@ -1,10 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { connect } from 'react-redux';
-import { AppDispatch, RootState } from '../..';
-import { loadCartAction } from '../../actions/cartAction';
-import { LoadProductsAction } from '../../actions/productsAction';
+import React, { useEffect } from 'react';
 import Product from '../../components/Product';
-import { useCart } from '../../context/cartContext';
 import { LoadingStateType } from '../../reducers/loadingReducer';
 
 type Props = {
@@ -15,12 +10,6 @@ type Props = {
 };
 
 const Home = ({ products, loadProducts, productsLoading, loadCart }: Props) => {
-  const {
-    loading: cartLoading,
-    addToCart,
-    updateToCart,
-    deleteCartItem,
-  } = useCart();
   // Component Did Mount
   // as soon a component available in dom use Effect callback will call
   useEffect(() => {
@@ -43,14 +32,4 @@ const Home = ({ products, loadProducts, productsLoading, loadCart }: Props) => {
   );
 };
 
-const mapStateToProps = (store: RootState) => ({
-  products: store.products,
-  productsLoading: store.loading.find((x) => x.actionType === 'LOAD_PRODUCTS'),
-});
-
-const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  loadProducts: () => LoadProductsAction()(dispatch),
-  loadCart: () => loadCartAction()(dispatch),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;
