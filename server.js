@@ -1,19 +1,29 @@
 const express = require("express")
+const bodyParser = require('body-parser');
+const authRoute = require("./routes/auth.route");
+const productsRoute = require("./routes/products.route");
 
 // created instance of express
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("hello world from express using nodemon")
+app.use(bodyParser.json())
+
+app.use("/api/auth", authRoute);
+
+app.use("/api/products", productsRoute);
+
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-app.get("/products", (req, res) => {
-  res.status(200).send("products data")
+app.use((err, req, res, next) => {
+  if(err) {
+    res.status(500).send({ error: "something went wrong..."})
+  }
+  next(err)
 })
-
-app.post("/", (req, res) => {
-  res.send("hello from post method")
-});
 
 app.listen("3000", () => {
   console.log("server started");
