@@ -1,8 +1,5 @@
 const ResponseWrapper = require("../helper/responseWrapper");
 const UserModel = require("../model/userModel");
-const { encryptPassword } = require("../utils");
-
-
 class Auth {
     static async login(req, res) {
         const responseWrapper = new ResponseWrapper(res);
@@ -17,7 +14,9 @@ class Auth {
             return responseWrapper.unauthorized("password is not valid")
         }
 
-        responseWrapper.ok(user)
+        const token = user.generateToken();
+
+        responseWrapper.ok({...user.toJSON(), access_token: token})
     }
 
     static async register(req, res) {
@@ -31,7 +30,9 @@ class Auth {
 
             const userData = await UserModel.create(req.body);
 
-            return responseWrapper.create(userData)
+            const token = userData.generateToken();
+
+            return responseWrapper.create({...userData, access_token: token})
         } catch (error) {
 
         }
