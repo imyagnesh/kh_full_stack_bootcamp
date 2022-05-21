@@ -1,0 +1,37 @@
+{
+  "todoList": [
+    {
+      "text": "get noodle",
+      "isCompleted": true,
+      "isEditing": false,
+      "id": 2
+    },
+    {
+      "text": "learn react",
+      "isCompleted": false,
+      "isEditing": false,
+      "id": 3
+    },
+    {
+      "text": "learn flutter",
+      "isCompleted": false,
+      "isEditing": false,
+      "id": 4
+    },
+    {
+      "text": "learn node",
+      "isCompleted": false,
+      "isEditing": false,
+      "id": 5
+    }
+  ],
+  "users": [
+    {
+      "email": "yagnesh.modh@gmail.com",
+      "password": "$2a$10$gWLfIOvFTyZWM//gKzPiKOlmQ7l.pZgrI4E.mSxNmxzXaP4VeD5Dy",
+      "name": "Yagnesh Modh",
+      "birthDate": "08/04/1987",
+      "id": 1
+    }
+  ]
+}

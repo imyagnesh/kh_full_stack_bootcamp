@@ -2,9 +2,15 @@ const express = require("express")
 const bodyParser = require('body-parser');
 const authRoute = require("./routes/auth.route");
 const productsRoute = require("./routes/products.route");
+const { connect, connection } = require("mongoose");
+const ConnectDb = require("./database");
+
+
 
 // created instance of express
 const app = express();
+
+ConnectDb.mongo();
 
 app.use(bodyParser.json())
 

@@ -1,11 +1,12 @@
 const express = require('express')
+const ResponseWrapper = require('../helper/responseWrapper')
 const router = express.Router()
 const validate = require("../middleware/validate")
 const {loginValidator, registerValidator} = require("../validators/authValidator")
 
 router.post("/login", validate(loginValidator) , (req, res) => {
-    console.log(req.body);
-    res.status(200).send("login Success...") 
+    const responseWrapper = new ResponseWrapper(res);
+    responseWrapper.ok("login Success...")
 })
 
 router.post("/register", validate(registerValidator), (req, res) => {
